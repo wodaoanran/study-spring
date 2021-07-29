@@ -1,0 +1,19 @@
+server:
+  port: 10010
+## jpa的配置
+  # 1. 选择数据库 2. 设置是否展示sql 3. 设置数据库定义策略 4.
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/test-zhengxie
+    driver-class-name: com.mysql.cj.jdbc.Driver
