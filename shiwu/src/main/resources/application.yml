@@ -1,0 +1,17 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/test-zhengxie?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
