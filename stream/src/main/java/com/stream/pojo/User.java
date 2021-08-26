@@ -2,6 +2,8 @@ package com.stream.pojo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class User {
     //姓名
@@ -15,7 +17,10 @@ public class User {
     //赏金
     private Double money;
 
-    public User(String name, Integer age, Integer sex, String address,Double money) {
+    public User() {
+    }
+
+    public User(String name, Integer age, Integer sex, String address, Double money) {
         this.name = name;
         this.age = age;
         this.sex = sex;

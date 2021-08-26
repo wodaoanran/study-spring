@@ -1,8 +1,9 @@
 package com.stream.stream;
 
-import com.demo.pojo.User;
+import com.stream.pojo.User;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -11,24 +12,26 @@ import java.util.stream.Collectors;
  * @date 2021/7/20
  */
 public class Stream {
+    /**
+     * list集合
+     * @return
+     */
     public static List<User> users() {
         List<User> list = Arrays.asList(
-                new User("李星云", 18, 0, "渝州", new Double(1000)),
-                new User("陆林轩", 16, 1, "渝州", new Double(500)),
-                new User("姬如雪", 17, 1, "幻音坊", new Double(800)),
-                new User("袁天罡", 99, 0, "藏兵谷", new Double(100000)),
-                new User("张子凡", 19, 0, "天师府", new Double(900)),
-                new User("陆佑劫", 45, 0, "不良人", new Double(600)),
-                new User("张天师", 48, 0, "天师府", new Double(1100)),
-                new User("蚩梦", 18, 1, "万毒窟", new Double(800))
+                new User("李星云", 18, 0, "渝州", 1000D),
+                new User("陆林轩", 16, 1, "渝州", 500D),
+                new User("姬如雪", 17, 1, "幻音坊", 800D),
+                new User("袁天罡", 99, 0, "藏兵谷", 100000D),
+                new User("张子凡", 19, 0, "天师府", 900D),
+                new User("陆佑劫", 45, 0, "不良人", 600D),
+                new User("张天师", 48, 0, "天师府", 1100D),
+                new User("蚩梦", 18, 1, "万毒窟", 800D)
         );
         return list;
     }
 
-    /*filter过滤(T-> boolean)*/
-
     /**
-     * filter筛选，collect收集结果
+     * filter筛选（对对象的属性进行筛选），collect收集结果（转换成操作后新的集合）
      */
     @Test
     public void filter(){
@@ -38,16 +41,16 @@ public class Stream {
         for (User user : newlist) {
             System.out.println(user.getName()+" --> "+ user.getAge());
         }
-    }
-   /* ---结果---
-    袁天罡 --> 99
-    陆佑劫 --> 45
-    张天师 --> 48*/
 
-    /*distinct 去重*/
+        /**
+         * 筛选性别
+         */
+        List<User> manUserList = list.stream().filter(student -> student.getSex() == 1).collect(Collectors.toList());
+        System.out.println(manUserList);
+    }
 
     /**
-     * 去重
+     *distinct去除重复数据
      */
     @Test
     public void distinct(){
@@ -57,100 +60,61 @@ public class Stream {
             System.out.println(user.getName()+" --> "+ user.getAge());
         }
     }
-    /*---结果---
-    李星云 --> 18
-    陆林轩 --> 16
-    姬如雪 --> 17
-    袁天罡 --> 99
-    张子凡 --> 19
-    陆佑劫 --> 45
-    张天师 --> 48
-    蚩梦 --> 18*/
-
-    /*sorted排序*/
 
     /**
+     * sorted()排序方法
      * 排序 Comparator.comparingInt()根据条件转换
+     * map()将数据重新定义
      */
     @Test
     public void sorted(){
         List<User> list = users();
+        /**
+         * 根据money进行排序
+         */
         List<User> newlist = list.stream()
                 .sorted(Comparator.comparingDouble(User::getMoney))
                 .collect(Collectors.toList());
-        for (User user : newlist) {
-            System.out.println(user.getName()+" --> "+ user.getMoney());
-        }
+        System.out.println(newlist.stream().map(user -> user.getName() + ":" + user.getMoney()).collect(Collectors.toList()));
     }
-   /* ---结果---
-    陆林轩 --> 16
-    姬如雪 --> 17
-    李星云 --> 18
-    蚩梦 --> 18
-    张子凡 --> 19
-    陆佑劫 --> 45
-    张天师 --> 48
-    袁天罡 --> 99*/
 
-    /*limit返回前n个元素*/
     /**
-     * limit分页
+     * limit分页，limit()参数返回的条数
      */
     @Test
     public void limit(){
         List<User> list = users();
         List<User> newlist = list.stream()
-                .sorted(Comparator.comparingInt(User::getAge))
-                .limit(2)
+                .limit(5)
                 .collect(Collectors.toList());
-        for (User user : newlist) {
-            System.out.println(user.getName()+" --> "+ user.getAge());
-        }
+        System.out.println(newlist.toString());
     }
-    /*---结果---
-    陆林轩 --> 16
-    姬如雪 --> 17*/
 
-    /*skip去除前n个元素*/
-    public static void skip(){
+    /**
+     * skip()跳过前几个元素
+     */
+    @Test
+    public void skip(){
         List<User> list = users();
         List<User> newlist = list.stream()
-                .sorted(Comparator.comparingInt(User::getAge))
-                .skip(2)
+                .skip(3)
                 .collect(Collectors.toList());
-        for (User user : newlist) {
-            System.out.println(user.getName()+" --> "+ user.getAge());
-        }
+        System.out.println(newlist.toString());
     }
-  /*  ---结果---
-    李星云 --> 18
-    蚩梦 --> 18
-    张子凡 --> 19
-    陆佑劫 --> 45
-    张天师 --> 48
-    袁天罡 --> 99*/
 
-    /*map(T->R)*/
-    public static void map(){
+    /**
+     * map() 取出一个
+     */
+    @Test
+    public void map(){
         List<User> list = users();
-        List<String> newlist = list.stream()
-                .map(User::getName).distinct().collect(Collectors.toList());
-        for (String add : newlist) {
-            System.out.println(add);
-        }
+        List<Integer> newlist = list.stream()
+                .map(User::getAge).distinct().collect(Collectors.toList());
+        System.out.println(newlist.toString());
     }
-  /*  ---结果---
-    李星云
-            陆林轩
-    姬如雪
-            袁天罡
-    张子凡
-            陆佑劫
-    张天师
-            蚩梦*/
 
-    /*flatMap(T -> Stream<R>)*/
-    public static void flatmap(){
+    @Test
+    public void flatmap(){
         List<String> flatmap = new ArrayList<>();
         flatmap.add("常宣灵,常昊灵");
         flatmap.add("孟婆,判官红,判官蓝");
@@ -163,61 +127,48 @@ public class Stream {
                 .map(s -> s.split(","))
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toList());
-        for (String name : flatmap) {
-            System.out.println(name);
-        }
+        System.out.println(flatmap.toString());
     }
-    /*---结果---
-    常宣灵
-            常昊灵
-    孟婆
-            判官红
-    判官蓝
-*/
-    /*allMatch（T->boolean）检测是否全部满足参数行为*/
-    public static void allMatch(){
+
+    /**
+     * allMatch() 全部匹配
+     */
+    @Test
+    public void allMatch(){
         List<User> list = users();
         boolean flag = list.stream()
                 .allMatch(user -> user.getAge() >= 17);
         System.out.println(flag);
     }
-	/*---结果---
-            false*/
 
     /*anyMatch（T->boolean）检测是否有任意元素满足给定的条件*/
-    public static void anyMatch(){
+    @Test
+    public void anyMatch(){
         List<User> list = users();
         boolean flag = list.stream()
                 .anyMatch(user -> user.getSex() == 1);
         System.out.println(flag);
     }
-	/*---结果---
-            true*/
 
     /*noneMatchT->boolean）流中是否有元素匹配给定的 T -> boolean条件*/
-    public static void noneMatch(){
+    public void noneMatch(){
         List<User> list = users();
         boolean flag = list.stream()
                 .noneMatch(user -> user.getAddress().contains("郑州"));
         System.out.println(flag);
     }
-	/*---结果---
-            true*/
 
     /*findFirst( ):找到第一个元素*/
-    public static void findfirst(){
+    public void findfirst(){
         List<User> list = users();
         Optional<User> optionalUser = list.stream()
                 .sorted(Comparator.comparingInt(User::getAge))
                 .findFirst();
         System.out.println(optionalUser.toString());
     }
-	/*---结果---
-    Optional[User{name='陆林轩', age=16, sex=1, money=500, address='渝州'}]
-*/
 
     /*findAny( ):找到任意一个元素*/
-    public static void findAny(){
+    public void findAny(){
         List<User> list = users();
         /*Optional<User> optionalUser = list.stream()
                 .findAny();*/
@@ -225,21 +176,16 @@ public class Stream {
                 .findAny();
         System.out.println(optionalUser.toString());
     }
-   /*---结果---
-    Optional[User{name='李星云', age=18, sex=0, money=1000, address='渝州'}]*/
-
 
     /*计算总数*/
-    public static void count(){
+    public void count(){
         List<User> list = users();
         long count = list.stream().count();
         System.out.println(count);
     }
-    /*---结果---
-            8*/
 
     /*最大值最小值*/
-    public static void max_min(){
+    public void max_min(){
         List<User> list = users();
         Optional<User> max = list.stream()
                 .collect(
@@ -255,17 +201,15 @@ public class Stream {
                 );
         System.out.println("max--> " + max+"  min--> "+ min);
     }
-  /* ---结果---
-    max--> Optional[User{name='袁天罡', age=99, sex=0, money=100000, address='藏兵谷'}]  min--> Optional[User{name='陆林轩', age=16, sex=1, money=500, address='渝州'}]*/
 
     /*求和_平均值*/
-   /* public static void sum_avg(){
+    /*public static void sum_avg(){
         List<User>list = users();
         int totalAge = list.stream()
                 .collect(Collectors.summingInt(User::getAge));
         System.out.println("totalAge--> "+ totalAge);
 
-        *//*获得列表对象金额， 使用reduce聚合函数,实现累加器*//*
+        //获得列表对象金额， 使用reduce聚合函数,实现累加器
         BigDecimal totalMpney = list.stream()
                 .map(User::getMoney)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -275,34 +219,28 @@ public class Stream {
                 .collect(Collectors.averagingInt(User::getAge));
         System.out.println("avgAge--> " + avgAge);
     }*/
-   /*---结果---
-    totalAge--> 280
-    totalMpney--> 105700
-    avgAge--> 35.0*/
 
     /*一次性得到元素的个数、总和、最大值、最小值*/
-    public static void allVlaue(){
+    public void allVlaue(){
         List<User> list = users();
         IntSummaryStatistics statistics = list.stream()
                 .collect(Collectors.summarizingInt(User::getAge));
         System.out.println(statistics);
     }
-  /* ---结果---
-    IntSummaryStatistics{count=8, sum=280, min=16, average=35.000000, max=99}
-*/
-    /*拼接*/
-    public static void join(){
+
+    /**
+     * Collectors.joining() 连接
+     */
+    @Test
+    public void join(){
         List<User> list = users();
         String names = list.stream()
                 .map(User::getName)
                 .collect(Collectors.joining(", "));
         System.out.println(names);
     }
-  /* ---结果---
-    李星云, 陆林轩, 姬如雪, 袁天罡, 张子凡, 陆佑劫, 张天师, 蚩梦*/
 
-   /* *//*分组*//*
-    public static void group(){
+    /*public static void group(){
         Map<Integer, List<User>> map = users().stream()
                 .collect(Collectors.groupingBy(User::getSex));
         System.out.println(new Gson().toJson(map));
@@ -311,14 +249,10 @@ public class Stream {
                 .collect(Collectors.groupingBy(User::getSex,
                         Collectors.groupingBy(User::getAge)));
         System.out.println(new Gson().toJson(map2));
-    }
-  *//* ---结果---
-    {"0":[{"name":"李星云","age":18,"sex":0,"address":"渝州","money":1000},{"name":"袁天罡","age":99,"sex":0,"address":"藏兵谷","money":100000},{"name":"张子凡","age":19,"sex":0,"address":"天师府","money":900},{"name":"陆佑劫","age":45,"sex":0,"address":"不良人","money":600},{"name":"张天师","age":48,"sex":0,"address":"天师府","money":1100}],"1":[{"name":"陆林轩","age":16,"sex":1,"address":"渝州","money":500},{"name":"姬如雪","age":17,"sex":1,"address":"幻音坊","money":800},{"name":"蚩梦","age":18,"sex":1,"address":"万毒窟","money":800}]}
+    }*/
 
-    {"0":{"48":[{"name":"张天师","age":48,"sex":0,"address":"天师府","money":1100}],"18":[{"name":"李星云","age":18,"sex":0,"address":"渝州","money":1000}],"19":[{"name":"张子凡","age":19,"sex":0,"address":"天师府","money":900}],"99":[{"name":"袁天罡","age":99,"sex":0,"address":"藏兵谷","money":100000}],"45":[{"name":"陆佑劫","age":45,"sex":0,"address":"不良人","money":600}]},"1":{"16":[{"name":"陆林轩","age":16,"sex":1,"address":"渝州","money":500}],"17":[{"name":"姬如雪","age":17,"sex":1,"address":"幻音坊","money":800}],"18":[{"name":"蚩梦","age":18,"sex":1,"address":"万毒窟","money":800}]}}
-*//*
-    *//*分组合计*//*
-    public static void groupCount(){
+    @Test
+    public void groupCount(){
         Map<Integer, Long> num = users().stream()
                 .collect(Collectors.groupingBy(User::getSex, Collectors.counting()));
         System.out.println(num);
@@ -329,20 +263,22 @@ public class Stream {
                 .collect(Collectors.groupingBy(User::getSex, Collectors.counting()));
         System.out.println(num2);
     }
-  *//* ---结果---
-    {0=5, 1=3}
-    {0=5, 1=1}*//*
 
-    *//*分区*//*
-    public static void partitioningBy(){
+    /*public static void partitioningBy(){
         List<User> list = users();
         Map<Boolean, List<User>> part = list.stream()
                 .collect(Collectors.partitioningBy(user -> user.getAge() <= 30));
         System.out.println(new Gson().toJson(part));
-    }
-  *//* ---结果---
-    {"false":[{"name":"袁天罡","age":99,"sex":0,"address":"藏兵谷","money":100000},{"name":"陆佑劫","age":45,"sex":0,"address":"不良人","money":600},{"name":"张天师","age":48,"sex":0,"address":"天师府","money":1100}],"true":[{"name":"李星云","age":18,"sex":0,"address":"渝州","money":1000},{"name":"陆林轩","age":16,"sex":1,"address":"渝州","money":500},{"name":"姬如雪","age":17,"sex":1,"address":"幻音坊","money":800},{"name":"张子凡","age":19,"sex":0,"address":"天师府","money":900},{"name":"蚩梦","age":18,"sex":1,"address":"万毒窟","money":800}]}
-*/
+    }*/
 
+    @Test
+    public void f1(){
+        String[] words = new String[]{"Hello","World"};
+        List<String[]> a = Arrays.stream(words)
+                .map(word -> word.split(""))
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println(a.toString());
+    }
 }
 

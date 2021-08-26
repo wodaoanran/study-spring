@@ -1,6 +1,6 @@
 package com.stream.stream;
 
-import com.demo.pojo.Person;
+import com.stream.pojo.Person;
 import org.junit.Test;
 
 import java.util.*;

@@ -12,10 +12,17 @@ import java.io.Serializable;
 @Entity
 @Table(name = "student")
 @Data
-public class Student implements Serializable {
+public class Student implements Serializable,Cloneable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
+    private String sex;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
